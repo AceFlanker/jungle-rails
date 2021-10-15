@@ -1,9 +1,40 @@
 <section class="orders-show">
 
   <header class="page-header">
-    <h1>Order #<%= @order.id %></h1>
+    <h1>Order <%= @order.id %></h1>
   </header>
 
+  <% line_items = LineItem.where(order_id: @order.id) %>
+
+  <h2>Order Details for <%= @order.email %></h2>
+  <div class="panel panel-default items">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Description</th>
+          <th>Price</th>
+          <th>Quantity</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% line_items.each do |item| %>
+          <%= render 'summary', item: item, product: Product.find_by(id: item.product_id) %>
+        <% end %>
+      </tbody>
+      <tfoot>
+        <tr>
+          <th colspan="4">
+            TOTAL:
+          </th>
+          <th>
+            <%= humanized_money_with_symbol @order.total_cents / 100.00 %>
+          </th>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
   <div class="order-summary jumbotron">
     <h4>Thank you for your order!</h4>
   </div>
